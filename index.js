@@ -7,53 +7,57 @@ const messages = [
   "やばい",
   "わろた",
 ]
+
 const PORT = 8080
 
+const contentTemplate = {
+  contentType: 1,
+  toType: 1,
+}
+
+const dataTemplate = {
+  toChannel: 1383378250,
+  eventType: "138311608800106203",
+}
+
+const requestOptions = {
+  method: 'POST',
+  host: "trialbot-api.line.me",
+  path: "/v1/events",
+  headers: {
+    "Content-type": "application/json; charset=UTF-8",
+    "X-Line-ChannelID": lineApiCredential.channelId,
+    "X-Line-ChannelSecret": lineApiCredential.channelSecret,
+    "X-Line-Trusted-User-With-ACL":lineApiCredential.mid, 
+  },
+}
+
 function say(text, to) {
-  const data = JSON.stringify({
+  const data = Object.assign({}, dataTemplate, {
     to: to,
-    content: {
+    content: Object.assign({}, contentTemplate, {
       text: text,
-      contentType: 1,
-      toType: 1,
-    },
-    toChannel: 1383378250,
-    eventType: "138311608800106203",
+    }),
   })
-  const opts = {
-    method: 'POST',
-    host: "trialbot-api.line.me",
-    path: "/v1/events",
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      "X-Line-ChannelID": lineApiCredential.channelId,
-      "X-Line-ChannelSecret": lineApiCredential.channelSecret,
-      "X-Line-Trusted-User-With-ACL":lineApiCredential.mid, 
-    },
-  }
   console.log(data)
-  console.log(opts)
-  const req = https.request(opts, function(res) {
+  const req = https.request(requestOptions, function(res) {
     res.on("data", function(chunk) {
       console.log(chunk.toString())
     })
   })
-  req.write(data)
+  req.write(JSON.stringify(data))
   req.end()
 }
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
-  extended: true
-}))
 
 app.post('/', function (req, res) {
-  console.log("post")
-  console.log(req.body.result[0]);
-  res.send('works!')
+  console.log("received")
   req.body.result.forEach(function(res) {
+    console.log(res)
     say(messages[Math.random() * messages.length | 0], [res.content.from])
   })
+  res.send(':)')
 })
 
 app.listen(PORT, function () {
