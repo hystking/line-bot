@@ -52,7 +52,7 @@ app.post('/', function (req, res) {
   console.log(req.body.result[0]);
   res.send('works!')
   req.body.result.forEach(function(res) {
-    say(messages[Math.random() * 2 | 0], [res.content.from], res.fromChannel, res.eventType)
+    say(messages[Math.random() * messages.length | 0], [res.content.from], res.fromChannel, res.eventType)
   })
 })
 
