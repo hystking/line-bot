@@ -9,7 +9,7 @@ const messages = [
 ]
 const PORT = 8080
 
-function say(text, to, toChannel, eventType) {
+function say(text, to) {
   const data = JSON.stringify({
     to: to,
     content: {
@@ -52,7 +52,7 @@ app.post('/', function (req, res) {
   console.log(req.body.result[0]);
   res.send('works!')
   req.body.result.forEach(function(res) {
-    say(messages[Math.random() * messages.length | 0], [res.content.from], res.fromChannel, res.eventType)
+    say(messages[Math.random() * messages.length | 0], [res.content.from])
   })
 })
 
