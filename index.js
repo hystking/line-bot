@@ -30,7 +30,7 @@ queue.process("dialogue", function(job, ctx, done) {
   console.log("processed dialogue")
   dialogue(job.data.requestData, function(res){
     queueMessage({
-      requestData: createRequestData(res.utt, job.data.to),
+      requestData: createRequestData(res.utt + "だぽん", job.data.to),
     })
     done()
   })
