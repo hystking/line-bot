@@ -9,6 +9,7 @@ const createStore = redux.createStore
 const createRequestData = require("./lib/create-request-data")
 const say = require("./lib/say")
 const dialogue = require("./lib/dialogue")
+const daponify = require("./lib/daponify")
 
 const PORT = 8080
 
@@ -29,10 +30,12 @@ queue.process("say", function(job, ctx, done) {
 queue.process("dialogue", function(job, ctx, done) {
   console.log("processed dialogue")
   dialogue(job.data.requestData, function(res){
-    queueMessage({
-      requestData: createRequestData(res.utt + "だぽん", job.data.to),
+    daponify(res.utt, function(text) {
+      queueMessage({
+        requestData: createRequestData(text, job.data.to),
+      })
+      done()
     })
-    done()
   })
 })
 
