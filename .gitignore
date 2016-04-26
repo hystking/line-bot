@@ -1,4 +1,5 @@
 config/line-api.js
 config/redis.js
+config/docomo-api.js
 node_modules
 *.log
