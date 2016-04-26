@@ -9,7 +9,6 @@ const createStore = redux.createStore
 const say = require("./lib/say")
 
 const PORT = 8080
-const PATTERNS = ["やばい", "わろた"]
 
 const queue = kue.createQueue({
   redis: require("./config/redis")
